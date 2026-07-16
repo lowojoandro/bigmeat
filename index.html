@@ -225,6 +225,38 @@
   .quiz-score{position:sticky;bottom:0;background:var(--ink);color:var(--bg);padding:14px 20px;border-radius:3px;margin-top:24px;font-family:"JetBrains Mono",monospace;letter-spacing:.1em;text-align:center;font-size:13px}
   .quiz-score b{color:var(--blood);font-size:16px}
 
+  /* ---------- ephemera / excerpts ---------- */
+  .frag-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+  .frag-filters button{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--panel);border:1px solid var(--line-strong);color:var(--ink-soft);padding:8px 13px;border-radius:2px;cursor:pointer}
+  .frag-filters button:hover{color:var(--ink)}
+  .frag-filters button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .frag-filters .fcount{margin-left:auto;align-self:center;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .frag-wall{columns:270px;column-gap:16px}
+  .frag{break-inside:avoid;margin:0 0 16px;background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:16px 18px;position:relative}
+  .frag .fkind{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;display:inline-block}
+  .frag .ftext{white-space:pre-wrap}
+  .frag .ffoot{margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--ink-soft)}
+  .frag .flink{color:var(--blood);cursor:pointer;text-transform:uppercase;letter-spacing:.1em}
+  .frag .flink:hover{text-decoration:underline}
+  .frag .fsrc{font-style:italic;font-family:"Spectral",serif;font-size:12px;text-transform:none;letter-spacing:0}
+  /* kind: excerpt */
+  .frag.k-excerpt{border-left:3px solid var(--drab)}
+  .frag.k-excerpt .fkind{color:var(--drab)}
+  .frag.k-excerpt .ftext{font-size:16px;line-height:1.55;color:var(--ink)}
+  /* kind: oneliner */
+  .frag.k-oneliner{border-left:3px solid var(--blood);background:rgba(135,33,29,.05)}
+  .frag.k-oneliner .fkind{color:var(--blood)}
+  .frag.k-oneliner .ftext{font-family:"Spectral",serif;font-style:italic;font-size:21px;line-height:1.32;color:var(--ink)}
+  /* kind: artifact */
+  .frag.k-artifact{border:1px dashed var(--c-corp);background:repeating-linear-gradient(45deg,transparent,transparent 9px,rgba(122,106,52,.04) 9px,rgba(122,106,52,.04) 10px),var(--panel)}
+  .frag.k-artifact .fkind{color:#7a6a34}
+  .frag.k-artifact .ftext{font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.55;color:var(--ink)}
+  /* kind: phantom */
+  .frag.k-phantom{border-left:3px solid var(--c-horror)}
+  .frag.k-phantom .fkind{color:#2f2a44}
+  .frag.k-phantom .ftext{font-family:"Anton",sans-serif;font-size:20px;line-height:1.12;text-transform:uppercase;letter-spacing:.01em;color:var(--ink)}
+  .frag.k-phantom .fstamp{position:absolute;top:12px;right:12px;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.12em;color:var(--c-horror);border:1px solid var(--c-horror);border-radius:2px;padding:2px 6px;transform:rotate(4deg);opacity:.75}
+
   .footer{border-top:1px solid var(--line);padding:30px 26px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
   .footer .blood{color:var(--blood)}
 
@@ -238,6 +270,7 @@
     .main{padding:22px 18px 60px}
     .wordmark::after{display:none}
     .acclaim-grid{columns:1}
+    .frag-wall{columns:1}
     table.ledger{font-size:13.5px}
     table.ledger td,table.ledger th{padding:8px 8px}
   }
@@ -251,6 +284,7 @@
   <div class="topmeta">FILES <b id="fileCount">—</b> · CAST <b id="castCount">—</b> · <span style="color:var(--blood)">STATUS: UNHINGED</span></div>
   <nav class="topnav">
     <button data-view="archive" onclick="go('archive')">Archive</button>
+    <button data-view="ephemera" onclick="go('ephemera')">Excerpts</button>
     <button data-view="map" onclick="go('map')">Map</button>
     <button data-view="codex" onclick="go('codex')">Personnel</button>
     <button data-view="ledger" onclick="go('ledger')">Ledger</button>
@@ -315,6 +349,15 @@
       <svg id="mapSvg" viewBox="0 0 920 660" role="img" aria-label="Network of connected story files"></svg>
       <div class="map-legend" id="mapLegend"></div>
     </div>
+  </div>
+</div>
+
+<!-- ============ EPHEMERA / EXCERPTS ============ -->
+<div id="view-ephemera" class="main hidden">
+  <div class="std">
+    <div class="index-head"><div><h2>Excerpts &amp; Ephemera</h2><p>The scraps the universe is actually made of: cold opens with no home, single savage lines, in-universe artifacts, and the phantom titles of works not yet written.</p></div></div>
+    <div class="frag-filters" id="fragFilters"></div>
+    <div class="frag-wall" id="fragWall"></div>
   </div>
 </div>
 
@@ -724,6 +767,58 @@ const QUIZ = [
    opts:["His physical strength and combat skills","His expertise in naval warfare and battleships","His leadership and strategic planning","His connections with military officials"], a:1},
 ];
 
+/* ------- EPHEMERA / EXCERPTS ------- */
+const KINDS=[
+  {id:"all",     label:"All"},
+  {id:"excerpt", label:"Cold opens"},
+  {id:"oneliner",label:"One-liners"},
+  {id:"artifact",label:"Artifacts"},
+  {id:"phantom", label:"Phantom titles"},
+];
+const KIND_LABEL={excerpt:"Cold open",oneliner:"One-liner",artifact:"In-universe artifact",phantom:"Unwritten"};
+const FRAGMENTS=[
+  // ---- cold opens / loose excerpts ----
+  {kind:"excerpt", text:"I want something I cannot have…\nI don't want to survive. I want to live!", src:"epigraph"},
+  {kind:"excerpt", text:"The unmistakable manoevolence of Johhny Jingleheimer Lee echoed across the courtyard. Vincent Lacap's soul turned cold from the sinister figure. Vincent simply dropped dead from the amount of adrenaline coursing through his veins, causing a blood vessel in his brain to burst.", link:"boodram"},
+  {kind:"excerpt", text:"240 volts DC utterly ruptured what little was left of Cedric Viscaraz.", link:"shenzhen"},
+  {kind:"excerpt", text:"Oil CEO DERRICKSON FOGLE slumped in his chair, gripping his rolodex. The masked operative walked over to the body and shoved a bahn mi into his pocket.\n\nPlink Plink.", link:"nytbest"},
+  {kind:"excerpt", text:"It was appalling, really, how easy Massimo fell for the Jiffy Lube scam.", src:"noted: humorous"},
+  {kind:"excerpt", text:"I grabbed the chromebook with vigor, and smashed it into Massimo's head with 5 megajoules of energy. Blood and brain, bitch!"},
+  {kind:"excerpt", text:"39 buried, 0 found. Santa Monica pier was never the same.", src:"labeled 'slop sentence'"},
+  {kind:"excerpt", text:"17 Bahn Mi's were brutally eaten. RIP."},
+  {kind:"excerpt", text:"It is for this piece of literature to which I owe my late wife Hisato, my three ailing pockets of sunshine Athena, Fable, and Juno, and, with everlasting gratuity, Noah K. Nizamian.", src:"dedication · Forw4rd Unto Dawn"},
+
+  // ---- one-liners / fragments ----
+  {kind:"oneliner", text:"Wong ran so that Meat Horror could walk.", link:"meatsquad"},
+  {kind:"oneliner", text:"If death was a language, he spoke it like a goddamn poet.", link:"meatsquad", src:"on Prigozhin"},
+  {kind:"oneliner", text:"Bullets don't discriminate. Between the sinners and the saints. They take, and they take, and they take. But we keep living anyways."},
+  {kind:"oneliner", text:"Sim2Real2Sim was the reason why I served 5 years in federal prison."},
+  {kind:"oneliner", text:"Latency, latency, latency. That's the trillion dollar problem. The trillion dollar bet."},
+  {kind:"oneliner", text:"What makes the grass grow? — The blood flow.", link:"meatsquad2"},
+  {kind:"oneliner", text:"On Monday I dreamt of it. On Tuesday I created the B2B SaaS. On Wednesday I went public. On Thursday I was Forbes Man of the Year. On Friday my fortune dissolved. On Saturday, I fell back to sleep. I never made it to Sunday.", src:"corporate Solomon Grundy"},
+  {kind:"oneliner", text:"I beg you to ask if I've moved mountains before — because believe me, I tried. This isn't about mountains.", src:"— David Zheng, 2012"},
+
+  // ---- in-universe artifacts ----
+  {kind:"artifact", text:"WELCOME TO BOBACAFE.\nWe might be able to make you a bingsu. Maybe. Depends if we're busy or not.\n\nBINGSU FLAVORS:\n> DEADBEEF\n> Chocolate\n> Vanilla", src:"no bingsu was found on the menu"},
+  {kind:"artifact", text:"Welcome to Cafe E. Ecoli. What interests you today?"},
+  {kind:"artifact", text:"FLEXFUEL — Buy Cheap, Buy Twice."},
+  {kind:"artifact", text:"Introducing: AirTalk 3.5+\nA groundbreaking — or perhaps I should say mind-blowing — new device from Z.H.A.N.G Laboratories.", link:"nytbest"},
+  {kind:"artifact", text:"Agatha King,\n\nWe write to inform you that your credit card has declined. Your purchase order of 3x Boston Dynamics 'Spot' robots will be cancelled and forcibly removed from your warehouse. Furthermore, we will take legal action against you if you do not comply.\n\nSincerely,\nBoston Dynamics.", src:"corporate correspondence"},
+  {kind:"artifact", text:"HUSK v. DESOLATE PLANET (2001)\nBackground: The Husk was walking to the toilet after a concrete job on Kepler-22B before he was riddled with bullets by Wagner Group Co.\nResult: Destroyed beyond recognition. The 14th Amendment could not be used.", src:"Articles V, Cases 3–12"},
+  {kind:"artifact", text:"STIGLER v. WONG (1994)\nWong ordered his carpenter employees to violently attack a visiting businessman. Death penalty for him.\nDissent: Stigler had broken the cardinal rule of the Carpenters' Guild, and was thus personally liable under the 10th Amendment.", link:"nytbest"},
+  {kind:"artifact", text:"I want my robot in a sleek, timeless finish — Onyx Blue."},
+
+  // ---- phantom titles (unwritten works) ----
+  {kind:"phantom", text:"Unwavering Resolve — a nine-volume saga", src:"Vol. 1 Young Buck · Vol. 5 No Witnesses · Vol. 9 Ultimatum. Most volumes exist only as a title."},
+  {kind:"phantom", text:"Software Samurai: The Bushido Codex"},
+  {kind:"phantom", text:"The Bourgeois Italian Death Scheme", src:"The Tuscan Plot · The Bourgeois Burial Club · The Venetian Contract"},
+  {kind:"phantom", text:"Meat Squad: Shadow Protocol", src:"also filed: Punk Tactics · Corporate Blackout · Kilerz Den"},
+  {kind:"phantom", text:"Puget Sound: The Day of Utter Silence"},
+  {kind:"phantom", text:"Brutal Hazards: Code Zero"},
+  {kind:"phantom", text:"The Great Dustbowl Event of Cal Poly"},
+  {kind:"phantom", text:"CHRIS P. BOODRAM: SURF N' TURF", link:"boodram"},
+];
+
 /* ================= LOGIC ================= */
 const storyById  = Object.fromEntries(STORIES.map(s=>[s.id,s]));
 const personById = Object.fromEntries(PEOPLE.map(p=>[p.id,p]));
@@ -733,11 +828,12 @@ function bodyText(key){const el=document.querySelector(`script[data-body="${key}
 function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 function strandName(id){return STRANDS.find(x=>x.id===id).name;}
 
-const VIEWS=["home","archive","map","codex","ledger","timeline","lexicon","acclaim","quiz"];
+const VIEWS=["home","archive","ephemera","map","codex","ledger","timeline","lexicon","acclaim","quiz"];
 function go(view,opts={}){
   VIEWS.forEach(v=>{const el=document.getElementById("view-"+v);if(el)el.classList.toggle("hidden",v!==view);});
   document.querySelectorAll(".topnav button").forEach(b=>b.classList.toggle("on",b.dataset.view===view));
   if(view==="archive") renderArchive(opts.strand||currentStrand);
+  if(view==="ephemera") renderEphemera();
   if(view==="map") renderMap();
   if(view==="codex") renderCodex();
   if(view==="ledger") renderLedger();
@@ -751,6 +847,7 @@ function go(view,opts={}){
 /* ---- HOME sections ---- */
 const HOME_SECTIONS=[
   {t:"Archive",v:"archive",d:"Every case file, sorted into its continuity strand. The reader with the margin commentary."},
+  {t:"Excerpts",v:"ephemera",d:"The cold opens, one-liners, fake ads, and phantom titles the universe is built from."},
   {t:"The Map",v:"map",d:"A live network of how every story wires into every other. It really is all connected."},
   {t:"Personnel",v:"codex",d:"The recurring cast, and every file each of them dies in."},
   {t:"The Ledger",v:"ledger",d:"Every named death, filed by victim, cause, and method. Sortable."},
@@ -993,6 +1090,26 @@ function renderLexicon(){
 }
 
 /* ---- ACCLAIM ---- */
+/* ---- EPHEMERA / EXCERPTS ---- */
+let fragFilter="all";
+function renderEphemera(){
+  const fbar=document.getElementById("fragFilters");
+  const shown=fragFilter==="all"?FRAGMENTS:FRAGMENTS.filter(f=>f.kind===fragFilter);
+  fbar.innerHTML=KINDS.map(k=>{
+    const n=k.id==="all"?FRAGMENTS.length:FRAGMENTS.filter(f=>f.kind===k.id).length;
+    return `<button class="${fragFilter===k.id?'on':''}" onclick="setFragFilter('${k.id}')">${k.label} · ${n}</button>`;
+  }).join("")+`<span class="fcount">${shown.length} shown</span>`;
+  const wall=document.getElementById("fragWall");
+  wall.innerHTML=shown.map(f=>{
+    const link=f.link&&storyById[f.link]?`<span class="flink" onclick="openFileFromView('${f.link}')">↳ ${storyById[f.link].file}</span>`:"";
+    const src=f.src?`<span class="fsrc">${f.src}</span>`:"";
+    const foot=(link||src)?`<div class="ffoot">${link}${src}</div>`:"";
+    const stamp=f.kind==="phantom"?`<span class="fstamp">UNWRITTEN</span>`:"";
+    return `<div class="frag k-${f.kind}">${stamp}<span class="fkind">${KIND_LABEL[f.kind]}</span><div class="ftext">${escapeHtml(f.text)}</div>${foot}</div>`;
+  }).join("");
+}
+function setFragFilter(k){fragFilter=k;renderEphemera();}
+
 function renderAcclaim(){
   const g=document.getElementById("acclaimGrid");g.innerHTML="";
   ACCLAIM.forEach(a=>{const el=document.createElement("div");el.className="blurb";el.innerHTML=`<q>${a.q}</q><div class="cite">— <b>${a.who}</b></div>`;g.appendChild(el);});
