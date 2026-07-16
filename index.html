@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIGMEAT — The Collected Files</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#e6e1d3; --panel:#dcd6c4; --panel-2:#d0c9b4;
+    --ink:#17150f; --ink-soft:#514c3d;
+    --blood:#87211d; --blood-deep:#5c1512;
+    --drab:#545734;
+    --line:rgba(23,21,15,.18); --line-strong:rgba(23,21,15,.42);
+    --stamp:rgba(135,33,29,.9);
+    /* strand colors (muted, document-aged) */
+    --c-meat:#87211d; --c-horror:#2f2a44; --c-war:#545734;
+    --c-corp:#7a6a34; --c-royale:#714322; --c-verse:#4a463a;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Spectral",Georgia,serif;font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(23,21,15,.012) 3px,rgba(23,21,15,.012) 4px);
+  }
+  a{color:inherit}
+  ::selection{background:var(--blood);color:var(--bg)}
+  .mono{font-family:"JetBrains Mono",monospace}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--blood);font-weight:500}
+  .hidden{display:none !important}
+
+  /* ---------- top bar ---------- */
+  .topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:18px;padding:12px 22px;background:var(--ink);color:var(--bg);border-bottom:3px solid var(--blood);flex-wrap:wrap}
+  .brand{font-family:"Anton",sans-serif;font-size:22px;letter-spacing:.04em;cursor:pointer;line-height:1}
+  .brand span{color:var(--blood)}
+  .topmeta{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;color:#bdb7a4;text-transform:uppercase}
+  .topmeta b{color:var(--bg)}
+  .topnav{margin-left:auto;display:flex;gap:2px;flex-wrap:wrap}
+  .topnav button{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:transparent;color:#cfc9b6;border:1px solid transparent;padding:7px 11px;cursor:pointer;border-radius:2px}
+  .topnav button:hover{color:var(--bg);border-color:rgba(230,225,211,.28)}
+  .topnav button.on{color:var(--bg);border-color:var(--blood);background:var(--blood-deep)}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;padding:76px 26px 46px;text-align:center;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero::before{content:"CLASSIFIED // DO NOT DISTRIBUTE // CLASSIFIED // DO NOT DISTRIBUTE // ";position:absolute;top:14px;left:0;right:0;white-space:nowrap;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.3em;color:rgba(135,33,29,.26);pointer-events:none}
+  .hero-kicker{margin:8px 0 18px}
+  .wordmark{font-family:"Anton",sans-serif;font-size:clamp(62px,15vw,164px);line-height:.86;letter-spacing:.01em;margin:0;position:relative;display:inline-block}
+  .wordmark .m2{color:var(--blood)}
+  .wordmark::after{content:"ANTHOLOGY №1";position:absolute;right:-8px;bottom:8px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;color:var(--ink-soft);transform:rotate(-90deg);transform-origin:right bottom}
+  .tagline{max-width:640px;margin:22px auto 0;font-size:19px;color:var(--ink-soft);font-style:italic}
+  .stamp{display:inline-block;margin-top:24px;padding:8px 18px;transform:rotate(-3.2deg);border:2.5px solid var(--stamp);color:var(--stamp);border-radius:3px;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;box-shadow:inset 0 0 0 2px rgba(135,33,29,.12)}
+  .cta-row{margin-top:32px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;padding:14px 22px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer;border-radius:2px;transition:transform .12s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+  .btn.blood{background:var(--blood);border-color:var(--blood)}
+
+  .counter-strip{display:flex;justify-content:center;flex-wrap:wrap;margin-top:48px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .stat{padding:20px 28px;border-right:1px solid var(--line);min-width:150px}
+  .stat:last-child{border-right:none}
+  .stat .n{font-family:"Anton",sans-serif;font-size:42px;line-height:1;color:var(--blood)}
+  .stat .l{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-soft);margin-top:8px}
+
+  /* home section grid */
+  .home-sections{max-width:1080px;margin:44px auto 0;padding:0 22px}
+  .hs-h{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);text-align:center;margin-bottom:18px}
+  .hs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+  .hs-card{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:18px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+  .hs-card:hover{transform:translateY(-3px);box-shadow:4px 6px 0 rgba(23,21,15,.13)}
+  .hs-card .hc-t{font-family:"Anton",sans-serif;font-size:22px;text-transform:uppercase;letter-spacing:.02em;line-height:1}
+  .hs-card .hc-d{font-size:14px;color:var(--ink-soft);margin-top:8px;line-height:1.45}
+  .soundtrack{max-width:1080px;margin:40px auto 0;padding:16px 22px;border-top:1px solid var(--line)}
+  .soundtrack .st-h{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin-bottom:10px}
+  .soundtrack .st-list{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-soft)}
+  .soundtrack .st-list span b{color:var(--ink);font-weight:500}
+
+  /* ---------- shared shell ---------- */
+  .shell{display:grid;grid-template-columns:250px 1fr;max-width:1280px;margin:0 auto;min-height:60vh}
+  .sidebar{border-right:1px solid var(--line);padding:26px 0}
+  .side-h{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);padding:0 24px 10px}
+  .strand{display:block;width:100%;text-align:left;background:transparent;border:none;cursor:pointer;padding:11px 24px;font-family:"Spectral",serif;font-size:16px;color:var(--ink);border-left:3px solid transparent}
+  .strand:hover{background:var(--panel)}
+  .strand.on{border-left-color:var(--blood);background:var(--panel);font-weight:600}
+  .strand .ct{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-soft);float:right}
+  .main{padding:30px 34px 80px;min-width:0}
+  .std{max-width:1040px;margin:0 auto}
+
+  .index-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;padding-bottom:16px;border-bottom:2px solid var(--ink)}
+  .index-head h2{font-family:"Anton",sans-serif;font-size:34px;letter-spacing:.02em;margin:0;text-transform:uppercase}
+  .index-head p{margin:6px 0 0;color:var(--ink-soft);font-style:italic;font-size:15px;max-width:560px}
+
+  /* ---------- index cards ---------- */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .card{text-align:left;background:var(--panel);border:1px solid var(--line);cursor:pointer;padding:0;border-radius:3px;overflow:hidden;transition:transform .12s ease,box-shadow .12s ease;display:flex;flex-direction:column}
+  .card:hover{transform:translateY(-3px);box-shadow:4px 6px 0 rgba(23,21,15,.14)}
+  .card-top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--ink);color:var(--bg)}
+  .card-file{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em}
+  .card-tag{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#bdb7a4}
+  .card-body{padding:16px;flex:1;display:flex;flex-direction:column}
+  .card h3{font-family:"Spectral",serif;font-weight:600;font-size:21px;line-height:1.15;margin:0 0 8px}
+  .card .syn{color:var(--ink-soft);font-size:14.5px;line-height:1.5;flex:1}
+  .card .foot{margin-top:14px;display:flex;justify-content:space-between;align-items:center;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  .kia{color:var(--blood);font-weight:700}
+  .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--drab);margin-right:6px;vertical-align:middle}
+  .status-dot.frag{background:var(--blood)}
+
+  /* ---------- reader ---------- */
+  .reader{max-width:720px;margin:0 auto;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .back{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:transparent;border:none;color:var(--blood);cursor:pointer;padding:0;margin-bottom:22px}
+  .back:hover{text-decoration:underline}
+  .file-header{border:1px solid var(--line-strong);border-radius:3px;overflow:hidden;margin-bottom:26px}
+  .file-header .bar{display:flex;justify-content:space-between;padding:9px 16px;background:var(--ink);color:var(--bg);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em}
+  .file-header .body{padding:22px 20px}
+  .file-header h1{font-family:"Anton",sans-serif;font-size:clamp(32px,6vw,52px);line-height:.98;letter-spacing:.01em;margin:0 0 14px;text-transform:uppercase}
+  .meta-grid{display:flex;flex-wrap:wrap;gap:8px 28px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+  .meta-grid b{color:var(--ink);font-weight:700}
+  .tags{margin-top:16px;display:flex;gap:7px;flex-wrap:wrap}
+  .tag{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--line-strong);border-radius:2px;color:var(--ink-soft)}
+
+  .reader-controls{display:flex;justify-content:flex-end;margin-bottom:14px}
+  .gallery-toggle{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;background:var(--panel);border:1px solid var(--line-strong);color:var(--ink);padding:8px 13px;border-radius:2px;cursor:pointer}
+  .gallery-toggle.on{background:var(--blood);border-color:var(--blood);color:var(--bg)}
+  .gallery-toggle:disabled{opacity:.4;cursor:not-allowed}
+
+  .story-text{font-size:18px;line-height:1.7}
+  .story-text p{margin:0 0 1.15em;white-space:pre-wrap}
+  .story-text .synopsis{background:var(--panel);border-left:3px solid var(--drab);padding:14px 18px;font-style:italic;color:var(--ink-soft);margin-bottom:26px;white-space:normal}
+  .story-text .continues{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blood);text-align:center;border-top:1px solid var(--line);padding-top:24px;margin-top:16px}
+
+  .margin-note{font-family:"Caveat",cursive;font-size:22px;line-height:1.15;color:var(--blood-deep);background:rgba(135,33,29,.06);border-left:2px solid var(--blood);padding:8px 14px;margin:-4px 0 20px;transform:rotate(-.5deg);white-space:normal}
+  .margin-note::before{content:"✎ ";opacity:.6}
+
+  .connections{margin-top:44px;border-top:2px solid var(--ink);padding-top:24px}
+  .connections h4{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);margin:0 0 14px}
+  .conn-sub{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:20px 0 10px}
+  .conn-list{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.04em;cursor:pointer;padding:8px 12px;background:var(--panel);border:1px solid var(--line-strong);border-radius:2px}
+  .chip:hover{background:var(--ink);color:var(--bg)}
+  .chip.person::before{content:"◈ ";color:var(--blood)}
+  .chip.person:hover::before{color:var(--bg)}
+
+  /* ---------- map ---------- */
+  .map-wrap{position:relative}
+  .map-caption{min-height:52px;margin-bottom:10px;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.05em;color:var(--ink-soft)}
+  .map-caption b{color:var(--ink);text-transform:uppercase;letter-spacing:.1em}
+  #mapSvg{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:3px;background:
+    radial-gradient(circle at 50% 46%,rgba(135,33,29,.05),transparent 62%),var(--panel)}
+  .map-node circle{cursor:pointer;transition:opacity .15s ease}
+  .map-node text{font-family:"JetBrains Mono",monospace;font-size:10px;fill:var(--ink);pointer-events:none}
+  .map-edge{stroke:var(--line-strong);fill:none;transition:opacity .15s ease,stroke .15s ease}
+  .map-legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:14px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;color:var(--ink-soft)}
+  .map-legend span{display:flex;align-items:center;gap:6px}
+  .lg-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+  /* ---------- ledger ---------- */
+  .ledger-tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;align-items:center}
+  .ledger-tools input,.ledger-tools select{font-family:"JetBrains Mono",monospace;font-size:12px;padding:9px 11px;border:1px solid var(--line-strong);background:var(--bg);border-radius:2px;color:var(--ink)}
+  .ledger-tools input{flex:1;min-width:180px}
+  .ledger-count{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin-left:auto}
+  table.ledger{width:100%;border-collapse:collapse;font-size:15px}
+  table.ledger th{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:10px 12px;border-bottom:2px solid var(--ink);cursor:pointer;color:var(--ink-soft);white-space:nowrap}
+  table.ledger th:hover{color:var(--blood)}
+  table.ledger td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.ledger tr:hover td{background:var(--panel)}
+  .victim{font-weight:600}
+  .method-pill{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;color:#fff}
+  .file-ref{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--blood);cursor:pointer}
+  .file-ref:hover{text-decoration:underline}
+
+  /* ---------- timeline ---------- */
+  .tl{position:relative;margin-top:10px;padding-left:24px}
+  .tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line-strong)}
+  .tl-era{margin:26px 0 10px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--blood);position:relative}
+  .tl-era::before{content:"";position:absolute;left:-24px;top:5px;width:14px;height:14px;border:3px solid var(--blood);border-radius:50%;background:var(--bg)}
+  .tl-item{position:relative;margin:0 0 14px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:3px;cursor:pointer;transition:transform .12s ease}
+  .tl-item:hover{transform:translateX(4px)}
+  .tl-item::before{content:"";position:absolute;left:-22px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--drab)}
+  .tl-date{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);text-transform:uppercase}
+  .tl-title{font-family:"Spectral",serif;font-weight:600;font-size:19px;margin:3px 0 4px}
+  .tl-note{font-size:14px;color:var(--ink-soft)}
+
+  /* ---------- codex ---------- */
+  .person-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:8px}
+  .person{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:18px}
+  .person .pname{font-family:"Anton",sans-serif;font-size:23px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
+  .person .prole{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--blood);margin:6px 0 12px}
+  .person .pnote{font-size:14.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:14px}
+  .person .pfiles{border-top:1px solid var(--line);padding-top:12px}
+  .person .pfiles-h{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px}
+  .filelink{display:block;background:none;border:none;text-align:left;cursor:pointer;padding:3px 0;font-family:"Spectral",serif;font-size:14px;color:var(--ink)}
+  .filelink:hover{color:var(--blood);text-decoration:underline}
+  .deaths{float:right;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--blood);font-weight:700}
+
+  /* ---------- acclaim ---------- */
+  .acclaim-grid{columns:2;column-gap:18px}
+  .blurb{break-inside:avoid;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--blood);border-radius:3px;padding:18px 20px;margin:0 0 18px}
+  .blurb q{font-family:"Spectral",serif;font-style:italic;font-size:18px;line-height:1.4;display:block}
+  .blurb .cite{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:12px}
+  .blurb .cite b{color:var(--blood)}
+
+  /* ---------- lexicon ---------- */
+  .lex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .lex{background:var(--panel);border:1px solid var(--line);border-radius:3px;padding:16px 18px}
+  .lex .term{font-family:"Anton",sans-serif;font-size:21px;letter-spacing:.01em;text-transform:uppercase;line-height:1}
+  .lex .pos{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blood);margin:4px 0 8px}
+  .lex .def{font-size:14.5px;color:var(--ink-soft);line-height:1.5}
+
+  /* ---------- quiz ---------- */
+  .quiz-intro{background:var(--panel);border:1px solid var(--line-strong);border-radius:3px;padding:22px;margin-bottom:26px}
+  .quiz-intro h2{font-family:"Anton",sans-serif;font-size:30px;text-transform:uppercase;margin:0 0 10px}
+  .qcard{border:1px solid var(--line-strong);border-radius:3px;margin-bottom:18px;overflow:hidden}
+  .qcard .qnum{background:var(--ink);color:var(--bg);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;padding:8px 16px}
+  .qcard .qtext{padding:16px 18px 8px;font-size:17px;font-weight:500}
+  .opts{padding:0 18px 16px}
+  .opt{display:block;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:2px;padding:11px 14px;margin-top:8px;cursor:pointer;font-family:"Spectral",serif;font-size:15px}
+  .opt:hover:not(:disabled){border-color:var(--ink)}
+  .opt.correct{background:rgba(84,87,52,.2);border-color:var(--drab);font-weight:600}
+  .opt.wrong{background:rgba(135,33,29,.14);border-color:var(--blood)}
+  .opt:disabled{cursor:default}
+  .opt .mk{font-family:"JetBrains Mono",monospace;font-size:11px;margin-right:10px;color:var(--ink-soft)}
+  .quiz-score{position:sticky;bottom:0;background:var(--ink);color:var(--bg);padding:14px 20px;border-radius:3px;margin-top:24px;font-family:"JetBrains Mono",monospace;letter-spacing:.1em;text-align:center;font-size:13px}
+  .quiz-score b{color:var(--blood);font-size:16px}
+
+  .footer{border-top:1px solid var(--line);padding:30px 26px;text-align:center;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+  .footer .blood{color:var(--blood)}
+
+  @media (max-width:820px){
+    .shell{grid-template-columns:1fr}
+    .sidebar{border-right:none;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;padding:14px 8px}
+    .side-h{width:100%}
+    .strand{width:auto;border-left:none;border-bottom:3px solid transparent;padding:8px 14px}
+    .strand.on{border-left:none;border-bottom-color:var(--blood)}
+    .strand .ct{display:none}
+    .main{padding:22px 18px 60px}
+    .wordmark::after{display:none}
+    .acclaim-grid{columns:1}
+    table.ledger{font-size:13.5px}
+    table.ledger td,table.ledger th{padding:8px 8px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand" onclick="go('home')">BIG<span>MEAT</span></div>
+  <div class="topmeta">FILES <b id="fileCount">—</b> · CAST <b id="castCount">—</b> · <span style="color:var(--blood)">STATUS: UNHINGED</span></div>
+  <nav class="topnav">
+    <button data-view="archive" onclick="go('archive')">Archive</button>
+    <button data-view="map" onclick="go('map')">Map</button>
+    <button data-view="codex" onclick="go('codex')">Personnel</button>
+    <button data-view="ledger" onclick="go('ledger')">Ledger</button>
+    <button data-view="timeline" onclick="go('timeline')">Timeline</button>
+    <button data-view="lexicon" onclick="go('lexicon')">Lexicon</button>
+    <button data-view="acclaim" onclick="go('acclaim')">Acclaim</button>
+    <button data-view="quiz" onclick="go('quiz')">Exam</button>
+  </nav>
+</div>
+
+<!-- ============ HOME ============ -->
+<section id="view-home">
+  <div class="hero">
+    <div class="hero-kicker eyebrow">Collected incident files · Vol. 1</div>
+    <h1 class="wordmark">BIG<span class="m2">MEAT</span></h1>
+    <p class="tagline">One universe. A dozen ways to die in it. A collaborative anthology of dark comedy, corporate satire, and profoundly ill-advised violence — filed, cross-referenced, and declassified.</p>
+    <div class="stamp">Reader discretion is a formality</div>
+    <div class="cta-row">
+      <button class="btn blood" onclick="go('archive')">Enter the archive</button>
+      <button class="btn ghost" onclick="go('map')">See how it connects</button>
+    </div>
+    <div class="counter-strip">
+      <div class="stat"><div class="n" id="kiaStat">0</div><div class="l">On-page fatalities<br>(and counting)</div></div>
+      <div class="stat"><div class="n" id="filesStat">0</div><div class="l">Case files<br>on record</div></div>
+      <div class="stat"><div class="n">1</div><div class="l">Shared<br>continuity</div></div>
+      <div class="stat"><div class="n">∞</div><div class="l">Times John Tolentino<br>has died</div></div>
+    </div>
+  </div>
+
+  <div class="home-sections">
+    <div class="hs-h">— The archive is more than a reader —</div>
+    <div class="hs-grid" id="homeSections"></div>
+    <div class="soundtrack">
+      <div class="st-h">On the record player (canon cues)</div>
+      <div class="st-list">
+        <span><b>"Eve of Destruction"</b> — Barry McGuire · Huế, 1969</span>
+        <span><b>"Mayonaka no Door"</b> — Miki Matsubara · the bus</span>
+        <span><b>"God's Plan"</b> — Drake · the Bloodfest</span>
+        <span><b>Lofi Quirky Hip Christmas Remix</b> · Boodram's playlist</span>
+        <span><b>"Tomahawk Chop"</b> · David Elyshiv's theme</span>
+      </div>
+    </div>
+  </div>
+  <div style="height:40px"></div>
+</section>
+
+<!-- ============ ARCHIVE + READER ============ -->
+<div id="view-archive" class="shell hidden">
+  <aside class="sidebar">
+    <div class="side-h">Continuity strands</div>
+    <div id="strandList"></div>
+  </aside>
+  <main class="main" id="mainPane"></main>
+</div>
+
+<!-- ============ MAP ============ -->
+<div id="view-map" class="main hidden">
+  <div class="std">
+    <div class="index-head"><div><h2>The Connection Map</h2><p>Every file, wired to every file it shares a character or a thread with. Hover a node to isolate its web. Click to open it. The Wong Space Center explosion is the gravity well the whole universe orbits.</p></div></div>
+    <div class="map-wrap">
+      <div class="map-caption" id="mapCaption"><b>Hover a file</b> to trace its connections across the canon.</div>
+      <svg id="mapSvg" viewBox="0 0 920 660" role="img" aria-label="Network of connected story files"></svg>
+      <div class="map-legend" id="mapLegend"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CODEX ============ -->
+<div id="view-codex" class="main hidden">
+  <div class="std">
+    <div class="index-head"><div><h2>Personnel</h2><p>Recurring cast of the shared universe. Most appear in multiple files. Most do not survive them. Click a file to open it.</p></div></div>
+    <div class="person-grid" id="personGrid"></div>
+  </div>
+</div>
+
+<!-- ============ LEDGER ============ -->
+<div id="view-ledger" class="main hidden">
+  <div class="std">
+    <div class="index-head"><div><h2>The Casualty Ledger</h2><p>Named deaths across the canon, filed by victim, cause, and method. Search a name. Sort a column. Note who appears more than once.</p></div></div>
+    <div class="ledger-tools">
+      <input type="text" id="ledgerSearch" placeholder="Search victim, cause, or file…" oninput="renderLedger()">
+      <select id="ledgerMethod" onchange="renderLedger()"><option value="">All methods</option></select>
+      <span class="ledger-count" id="ledgerCount"></span>
+    </div>
+    <table class="ledger">
+      <thead><tr>
+        <th onclick="sortLedger('victim')">Victim ▾</th>
+        <th onclick="sortLedger('cause')">Cause of death</th>
+        <th onclick="sortLedger('method')">Method</th>
+        <th onclick="sortLedger('file')">File</th>
+      </tr></thead>
+      <tbody id="ledgerBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============ TIMELINE ============ -->
+<div id="view-timeline" class="main hidden">
+  <div class="std" style="max-width:760px">
+    <div class="index-head"><div><h2>Canon Timeline</h2><p>The universe runs from a jungle in 1969 to a Guitar Center in 3019 AD to a space station a million miles out. Click any entry to read the file.</p></div></div>
+    <div class="tl" id="timeline"></div>
+  </div>
+</div>
+
+<!-- ============ LEXICON ============ -->
+<div id="view-lexicon" class="main hidden">
+  <div class="std">
+    <div class="index-head"><div><h2>The Lexicon</h2><p>The recurring vocabulary of the BIGMEAT universe. Half glossary, half onboarding for anyone who didn't write it.</p></div></div>
+    <div class="lex-grid" id="lexGrid"></div>
+  </div>
+</div>
+
+<!-- ============ ACCLAIM ============ -->
+<div id="view-acclaim" class="main hidden">
+  <div class="std">
+    <div class="index-head"><div><h2>Critical Acclaim</h2><p>What the critics are saying. The critics are the authors. And their characters. Sometimes posthumously.</p></div></div>
+    <div class="acclaim-grid" id="acclaimGrid"></div>
+  </div>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div id="view-quiz" class="main hidden">
+  <div class="std" style="max-width:700px">
+    <div class="quiz-intro">
+      <div class="eyebrow">AP Writers' Guild · Standardized Assessment</div>
+      <h2>The Exam</h2>
+      <p style="margin:0;color:var(--ink-soft);font-style:italic">Sourced verbatim from the reading-comprehension questions the authors wrote about their own stories. Answer honestly. C's get degrees.</p>
+    </div>
+    <div id="quizQuestions"></div>
+    <div class="quiz-score" id="quizScore">SCORE: <b>0</b> / 0 CORRECT</div>
+  </div>
+</div>
+
+<div class="footer">
+  BIGMEAT™ · <span class="blood">www.BIGMEAT.com</span> · "Wong ran so that Meat Horror could walk." · A living archive — pour more files in anytime
+</div>
+
+<!-- ============ RAW STORY TEXT ============ -->
+<script type="text/plain" data-body="meathorror">The Meat Horror of Elyshiv — October 11, 2003.
+
+*Alarms blaring in the distance as red lights flash in every section of the lab*
+"SIR, WE NEED TO EVACUATE NOW"
+"I cannot do that Dr Tran. I need to secure the threat, with my OWN damn hands. Even if I die trying."
+"But sir, your chance of surviving the test subject's hunger induced rampage is next to zero. Please just come with me. If you die, what will we do without your knowledge."
+"It's time you take my place Dr Tran as lead of the new minds facility. Heh, I know you'll fill my shoes better than I did Heh."
+"It was an honor sir, see you around Dr. Nazmian."
+
+*Dr. Nazmian walks through one of the walls that were busted open by the thing, as Dr. Tran is dropped a ladder through the roof of the facility by a rescue copter*
+
+"My God Damn problem. My God Damn solution." Dr. Nazmian muttered to himself as he could smell the funk of the thing as he walked closer to the epicenter of the lab.
+
+He started to go down floor by floor, the sounds of chomping, farting, roaring, and mass being thrown around getting louder as the Doctor descended.
+
+"ELEYSHIV", Dr. Nazmian screamed as he got to its layer.
+
+The ball of meat rolled out from the dark to face its creator.
+
+"Where is my homewo—COUGH COUGH my physics homework Dr. Nazmian, I am starving."
+"I don't HAVE your blasted homework you meat horror."
+"Then it's CRUNCHIN' TIME."
+
+The Meat Horror stood up on its protruding meat tendrils and started to rise. Dr. Nazmian standing fearless against him even though he knew what was to come.
+
+"Bloody Meat Hor-" a crunch and then silence… followed by a greasy fart from the Meat Horror.
+
+The Meat Horror's name only slipped out from a manilla folder. Codename "David&Goliath". The CEO looked down in horror at the slipped document. He was going to be executed on the spot for this. He sung his last hoorah and valiantly ripped out his own liver.</script>
+
+<script type="text/plain" data-body="unwavering">Unwavering Resolve Vol. 1: Young Buck
+
+His room was remarkably volumetric. His shirts were folded neatly on the blanket of his bed yet his pants laid sprawled across his wood floor. A faint light peeked through the blinds and brightened a particular spot: His collection of Kogi coupons, dating back a couple years, and the stickers that were cemented onto the case.
+
+In tandem with the small hum of the heating unit, a flurry of keys being pressed could be heard. "God…why won't this code work? Control f…uhh…—AH! There it is, I'm just missing a parentheses and a semicolon. How did that even happen? Alright, time to compile, you better work."
+
+TypeError: 'range' object does not support item assignment
+
+"Oh my god…okay. No no it's okay! I got this", Ayush repeated. "I got this." Ayush furiously typed a few more lines of code, hoping that it would fix the problem.
+
+Stack.Python: Unindent does not match any outer indentation level on line [3432]
+
+He let out a deep sigh, slammed his laptop shut, and sunk back into his chair. The banner from the recent robotics competition that he and his team had won years ago hung on the wall in front of him, and he stared at it. He stared at it longingly, reminiscing on what could've been.</script>
+
+<script type="text/plain" data-body="boodram">Boodram Chronicles: Requiem
+
+I walked down the hall, back to my seat against the leftmost wall. I put my pen back into my backpack, and when I looked up, Mr Boodram sat firmly in his chair, staring blankly into the reflection of the lights on the plaster floor. His expression was similar to that of a man that has seen one too many things in his life, yet was no better off without it. What was he thinking about? What to teach? Disney villains? No, it must have been the Paria pipeline incident. Everyone knew yet they didn't want to speak anything of it.
+
+It was truly a horrendous sight. He just sat there. It was ominous. Whipping out his phone, he attempted to make himself look busy, to get away from the embarrassment that was himself. Nobody would talk to him. Nobody. Could it have been his troubled past that haunted his soul?
+
+His hands were crossed across his lap. He gently tapped his hands together in a clapping motion.
+"Time… ohh wow… How time flies by…. I wish I could be there for them. I goed."
+
+In the few instances that a student would look up, he'd stare back at them with the most sinister look you'd ever seen. The student would look away, and he'd still stare for about a few more seconds in an attempt to startle you or simply catch you off guard, and when it was over, he'd begin to ponder again.
+
+His face showed only a blank expression. There was nothing behind his lifeless eyes. He was a hollow man, hollowed out by the erroneous behavior he witnessed. He was stoic, no, not stoic… he was.. He was sinister. He meant harm. He moved his feet a bit forward.
+
+A student asked him: "Hey…so you got any plans for thanksgiving?"
+He choked on his words. "U-u-uhhh..y-yeah I do. I do. Why ask?"
+"You know, just checking up!"
+He grunted. "Thanks." and then went back to solemnly contemplating seemingly nothing.
+
+Mr Boodram took a solemn oath to be dignified till the very end, a homage to Fyzal if you will.
+"Sooooo. Who wants to do a disney villain project? Anybody? No? Anyways, just go to modules…. And scroll down to Mr B stuff, and then make a copy of the document."
+There was a deafening silence before he opened his mouth again… "I'm not gonna tell you what to do because it's on the document."
+
+Mr Boodram was a sack of flesh and bones. A bit of chubb as well. He sat there with his hands in his pockets, feet wide apart, and a lanyard with his ID card hanging from his neck. He was a ruptured man, not knowing what his next step in life would be.
+
+Suddenly, he turned his head to the side. His eyes began to tear up, the lip of his mouth drooped. It took only one thought about his days teaching in university, when he was a young man, full of energy and ready to teach, eager to pursue his career in teaching. He thought to himself, I can't take this any longer. Why? Why am I here? How did I end up here…?</script>
+
+<script type="text/plain" data-body="meatsquad">💀 Meat Squad 💀
+
+Clean up on aisle three. Those guys got f7cking mopped up. Adrian, what's the sit rep? "We took Yvens Chenovski to the gutter. God damn rat wouldn't speak so we stuck two into him." Ok, good. Aldrin — go set up the outpost due North of 120. Make sure not even an owl could spot you. "Roger that, cap. Drinks on me if we get into a firefight."
+
+That was commander Prigozhin, head of Wagner Co. and ex vice president of the NOSF. That stands for National Offensive Special Forces. He's among the most feared man on this planet, and very few even got close enough to touch him. If death was a language, he spoke it like a goddamn poet.
+
+The other 4 operatives aren't no scrubs either. They were the hardest men of the regiment. They've gone through years of rigorous training, tasked to assassinate Chi Xing Ping, take down the emperor of Japan — you get the point. The only exception was Adrian Nguyen. He was picked up by the Meat squad on an extraction mission after seeing his precocious intellect, specifically on the topic of battleships and naval warfare.
+
+"Alright boys. Gather round and have a seat. We're going to be here for a while." said the operations commander to the Meat Squad. He began the debrief:
+
+"As you very well know by now, there's been an incident at the Wong Space Center. Media will have you believe there was some sort of accident with the Chogbert 5 rocket. We know another truth. At 11:05 AM, several operatives contracted by Biggsdyne corporation stormed the Wong Space Center. Your job is to eliminate the operatives, recover the stolen data, and exfiltrate without anyone knowing your presence."
+
+"Uhhh Erm…. Well Actually… Question. Isn't there a Chinese aircraft carrier off the coast? I hear they use tomahawk missiles!!" blurted Adrian.
+
+"You will keep your damn mouth shut! The only reason you are here, let alone alive, is because we need someone to decrypt the data. Other than that you are god damn useless." barked the commander at Adrian.
+
+Adrian timidly sat back down and hung his head low.
+
+"Very well. You guys will board the stealth blackhawk helicopter in T-minus 10! Get your gear ready, we are gonna mop this situation up and be back in time for chow." announced Prigozhin.
+
+Dylan walked over to his locker, surprised to see a new weapon. He read the information card that was next to it: The integrally suppressed Mx5-carbine used caseless ammunition at sub sonic speeds alongside a suppressor. It was quiet as a knife, deadly as a dagger, and could murk people a mile away.
+
+"God damn. This sh8 is hard-core." remarked Dylan.
+
+[ FILE CONTINUES — the operation goes exactly as badly as you'd expect. Full text available in the source document; drop it in here. ]</script>
+
+<!-- ============ APP LOGIC ============ -->
+<script>
+/* ------- STRANDS + STORIES ------- */
+const STRANDS = [
+  {id:"all",   name:"All files",              color:"#17150f"},
+  {id:"meat",  name:"The Meat Squad Saga",    color:"var(--c-meat)"},
+  {id:"horror",name:"The Meat Horror Files",  color:"var(--c-horror)"},
+  {id:"war",   name:"War Dossiers",           color:"var(--c-war)"},
+  {id:"corp",  name:"Corporate / Boodram Age",color:"var(--c-corp)"},
+  {id:"royale",name:"Survival Programs",      color:"var(--c-royale)"},
+  {id:"verse", name:"Poems & Ephemera",       color:"var(--c-verse)"},
+];
+const STRAND_HEX = {meat:"#87211d",horror:"#2f2a44",war:"#545734",corp:"#7a6a34",royale:"#714322",verse:"#4a463a"};
+
+const STORIES = [
+  { id:"meatsquad", title:"Meat Squad", strand:"meat", file:"MS-001", date:"Present day", status:"frag",
+    tags:["Wagner Co.","Betrayal","Green tips"], kia:"11+",
+    syn:"Five elite operatives are sent to mop up the Wong Space Center. Their commander is playing all sides. Nobody accounts for the third side.",
+    cast:["prigozhin","aldrin","dylan","adrian","syed","wong"], conn:["nytbest","insectoids","meathorror"], body:"meatsquad" },
+  { id:"meatsquad2", title:"Meat Squad 2: Repackaged", strand:"meat", file:"MS-002", date:"7 weeks later", status:"frag",
+    tags:["Bunker","Insurgents","The list on the wall"], kia:"40+",
+    syn:"A cartel raid, a corridor of insurgents, and a photograph on a corkboard Aldrin was never supposed to see. Ends, as these things do, dangling from a helicopter.",
+    cast:["aldrin","dylan","wong"], conn:["meatsquad"], body:null },
+  { id:"meathorror", title:"The Meat Horror of Elyshiv", strand:"horror", file:"MH-001", date:"Oct 11, 2003", status:"frag",
+    tags:["Origin","Crunchin' time","Manila folder"], kia:"2",
+    syn:"Dr. Nazmian goes down floor by floor to secure his own creation with his own hands. Codename on the folder: David&Goliath.",
+    cast:["david","nazmian"], conn:["terror","desolate","insectoids"], body:"meathorror" },
+  { id:"terror", title:"Terror", strand:"horror", file:"MH-002", date:"Oct 2, 2023", status:"frag",
+    tags:["Bloodfest","First responders","Pizza grease"], kia:"Many",
+    syn:"A helicopter goes down, an 'active shooter' turns out to be something that reassembles itself, and Team Ace learns the words 'Meat Horror' the hard way.",
+    cast:["david","tolentino"], conn:["meathorror","bloodfest"], body:null },
+  { id:"desolate", title:"Ode to a Desolate Planet", strand:"horror", file:"MH-003", date:"Deep future", status:"frag",
+    tags:["Orbital","Containment breach","M6 Team"], kia:"A whole station",
+    syn:"A million miles from Earth wasn't enough to keep it contained. Two of the most powerful men alive let it out on purpose. Some men just want to see the world burn.",
+    cast:["david","dylan","tolentino"], conn:["meathorror"], body:null },
+  { id:"bloodfest", title:"CalTech Bloodfest", strand:"horror", file:"MH-004", date:"Oct 31, 2023", status:"frag",
+    tags:["Halloween","Leeches","Gods Plan"], kia:"A whole party",
+    syn:"133 people at the best party of the year mistake real gore for great decorations. The meat horror sends out leeches. Richarlson finally finds a purpose.",
+    cast:["david","tolentino"], conn:["terror","meathorror"], body:null },
+  { id:"hue", title:"Battle of Huế: 1969", strand:"war", file:"WD-001", date:"Sept 18, 1969", status:"frag",
+    tags:["Tết offensive","Napalm","Bahn mi interrogation"], kia:"259+",
+    syn:"A street-by-street assault on a dug-in city, a nuclear device in the rear, and a POW named Syed who will confess to anything to keep his teeth.",
+    cast:["tolentino","syed","andrew","boodram"], conn:["desolate","battleroyale"], body:null },
+  { id:"deltap", title:"Delta P", strand:"war", file:"WD-002", date:"—", status:"frag",
+    tags:["Saturation diving","Rush job","Profit margins"], kia:"5 divers",
+    syn:"Five divers sent 300 feet down to patch a pipeline leak in under 24 hours. Something is off. It was always about the profit margins.",
+    cast:["boodram"], conn:["hue"], body:null },
+  { id:"boodram", title:"Boodram Chronicles: Requiem", strand:"corp", file:"CB-001", date:"—", status:"active",
+    tags:["Character study","The husk","Paria pipeline"], kia:"0 (spiritually, many)",
+    syn:"A profile of the most isolated man in Room M06. He plays acapella Christmas music to break the ice. The class responds only with the sound of the AC unit.",
+    cast:["boodram"], conn:["deltap","shenzhen"], body:"boodram" },
+  { id:"shenzhen", title:"99 Days in Shenzhen", strand:"corp", file:"CB-002", date:"—", status:"active",
+    tags:["Cubicle","Sprint 43.1.2","B2B SaaS"], kia:"0",
+    syn:"Cedric drafts a career-ending resignation manifesto into a Teams call, then backspaces it character by character. Somewhere, Francesco is stringing along another set of interns.",
+    cast:[], conn:["boodram"], body:null },
+  { id:"unwavering", title:"Unwavering Resolve Vol. 1: Young Buck", strand:"corp", file:"CB-003", date:"—", status:"active",
+    tags:["TypeError","Robotics team","Redemption arc"], kia:"0 (yet)",
+    syn:"Ayush stares at a banner from a competition he used to win, and a semicolon he can't find. The opening chapter of a nine-volume descent.",
+    cast:[], conn:["boodram"], body:"unwavering" },
+  { id:"battleroyale", title:"Battle Royale (2023)", strand:"royale", file:"SP-001", date:"2023", status:"frag",
+    tags:["Grad trip","Neck collars","Greed"], kia:"~40 classmates",
+    syn:"A senior class trip to Japan ends on a deserted island with exploding necklaces. Nick Wong asks: what is the nature of greed? The answer is a checkmate from a queen to a pawn.",
+    cast:["wong","tolentino","adrian","syed","david","dylan"], conn:["meatsquad","saw"], body:null },
+  { id:"saw", title:"Saw: Rest In Pieces", strand:"royale", file:"SP-002", date:"Halloween", status:"frag",
+    tags:["The drill","One man one bullet","Numbers on paper"], kia:"5 friends",
+    syn:"Seven friends decide to scare kids for Halloween and drive past the wrong concrete building. The puzzles want a pound of flesh. Literally.",
+    cast:["syed","adrian"], conn:["battleroyale"], body:null },
+  { id:"insectoids", title:"Insectoids' Wrath", strand:"horror", file:"MH-005", date:"Wartime", status:"frag",
+    tags:["Powered armor","David Elyshiv MK 3","Orbital strike"], kia:"Millions",
+    syn:"When the insectoid hives overrun the line, the UFW releases their answer: a cloned amalgamation of mankind. Half insectoid, half man, 100% fat. Cue David.",
+    cast:["david","andrew","tolentino"], conn:["meathorror","nytbest"], body:null },
+  { id:"nytbest", title:"New York Times Best (Based on True Events)", strand:"meat", file:"MS-003", date:"—", status:"frag",
+    tags:["Wong Space Center","Chogbert 5","Dr. King"], kia:"Everyone, eventually",
+    syn:"The origin of the Wong Space Center explosion half the universe references. John Fogle, a screwdriver, a blast door, and a plan that goes three layers of betrayal deep.",
+    cast:["wong","enzo","david","andrew"], conn:["meatsquad","insectoids"], body:null },
+  { id:"poems", title:"Articles V 8–15: Poems", strand:"verse", file:"EP-001", date:"—", status:"active",
+    tags:["Verse","Cogs","If pigs could fly"], kia:"—",
+    syn:"The universe in miniature: odes to the husk, checkmate of a queen to a pawn, and Boodram's own devastating 'If pigs could fly.'",
+    cast:["david","boodram"], conn:["boodram","meathorror"], body:null },
+  { id:"mopup", title:"The Mop Up (Podcast)", strand:"meat", file:"MS-004", date:"—", status:"active",
+    tags:["Interview","Mission Flobbert","Camaraderie"], kia:"Retconned",
+    syn:"John Tolentino interviews the Meat Squad about the lighter side of covert ops — pie-eating contests, Flobbert festivals — carefully omitting how most of them died.",
+    cast:["tolentino","prigozhin","adrian","dylan"], conn:["meatsquad"], body:null },
+];
+
+/* ------- PEOPLE ------- */
+const PEOPLE = [
+  { id:"tolentino", name:"John Tolentino", role:"Recurring casualty / podcast host",
+    note:"Dies more than anyone in the canon. Also a Nobel-winning book reviewer, a podcast host, a Huế City private, and a Battle Royale student. Death is not binding for John.",
+    files:["hue","terror","desolate","bloodfest","battleroyale","insectoids","mopup"] },
+  { id:"adrian", name:"Adrian Nguyen", role:"Naval scientist (non-combatant)",
+    note:"Obsessed with battleships, tomahawk missiles, and the USS Iowa. Repeatedly placed in situations requiring composure. Repeatedly does not have it.",
+    files:["meatsquad","battleroyale","saw","mopup"] },
+  { id:"wong", name:"Nick Wong", role:"Architect of nearly everything",
+    note:"Rocketry-competition money laundered into a shadow empire. Runs the Wong Space Center and Biggsdyne. Pulls the trigger when he god damn wants.",
+    files:["meatsquad","meatsquad2","battleroyale","nytbest"] },
+  { id:"david", name:"David Elyshiv", role:"The Meat Horror / MK 3",
+    note:"A ball of sentient meat, a cloned super-soldier, and a fat crossbow-wielding student — depending on the file. Codename: David&Goliath. Two beasts, one man.",
+    files:["meathorror","terror","desolate","bloodfest","battleroyale","insectoids","nytbest","poems"] },
+  { id:"prigozhin", name:"Prigozhin", role:"Meat Squad commander",
+    note:"Speaks death like a poet. Adheres perfectly to mission objectives — his own. If there's trust with him, he will break it.",
+    files:["meatsquad","mopup"] },
+  { id:"dylan", name:"Dylan Larsen", role:"Meat Squad / CNSA director",
+    note:"A military machine with the emotional range of a lock. Follows orders to the letter, including the ones nobody wanted followed. Later releases the Meat Horror for fun.",
+    files:["meatsquad","meatsquad2","desolate","battleroyale"] },
+  { id:"aldrin", name:"Aldrin Dizon", role:"Meat Squad operative",
+    note:"Lets the wind turn his wheels. Sees a photograph on a corkboard he shouldn't. Spends a lot of the canon bleeding from the knee.",
+    files:["meatsquad","meatsquad2"] },
+  { id:"syed", name:"Syed", role:"Operative / POW / psychopath",
+    note:"Butcher's-son backstory, desensitized to slaughter. Tortured for An Lao Valley intel. Wins the wrong game in Saw. Deeply unwell.",
+    files:["meatsquad","hue","battleroyale","saw"] },
+  { id:"andrew", name:"Andrew Thai Tran", role:"Commander (multi-front)",
+    note:"A feared Vietnamese guerrilla at Huế with 400+ confirmed kills; also the UFW military head against the insectoids. Not Thai. Not Tran. Definitely a killer.",
+    files:["hue","insectoids","nytbest"] },
+  { id:"boodram", name:"Chris Boodram", role:"The husk",
+    note:"A CSUN graduate teaching AP History to a class that will not speak to him. Haunted by the Paria pipeline. Also, in another life, a saturation diver in Delta P.",
+    files:["boodram","deltap","hue","poems"] },
+  { id:"enzo", name:"enzo Cellis", role:"Wong Space Center director",
+    note:"Favorite word: gander. His jokes never land. Shot in the arm, then the janitor's closet — from director back to janitor, full symbolic circle.",
+    files:["nytbest"] },
+  { id:"nazmian", name:"Dr. Nazmian", role:"Creator of the Meat Horror",
+    note:"Chose to die securing his creation with his own hands rather than let his knowledge walk. His God Damn problem, his God Damn solution.",
+    files:["meathorror"] },
+];
+
+/* ------- COMMENTS (verbatim marginalia, mapped to paragraph index) ------- */
+const COMMENTS = {
+  boodram: [
+    {after:1, text:"WTF IS HIS NAME Chriss Boodram."},
+    {after:2, text:"OH MY GOD NOBODY TALKS TO HIM LMAOOOOOOOOOOOOOOOO"},
+    {after:5, text:"He is staring RIGHT AT YOU."},
+    {after:8, text:"SO WIDE EYED"},
+    {after:11, text:"LOLLLLOL his feelings are hurt.."},
+    {after:13, text:"ANDREWW THIS MUSIC PLAYLIST IS JUST BOODRAMS FEELINGS"},
+  ],
+  meatsquad: [
+    {after:0, text:"Zdis good"},
+    {after:8, text:"HOOOH SH^t thats a good god damned story"},
+  ],
+};
+
+/* ------- LEDGER ------- */
+const M = {gun:"#87211d",exp:"#5c1512",meat:"#2f2a44",blunt:"#714322",melee:"#8a5a2b",env:"#545734",abs:"#4a463a"};
+const METHODS = {gun:"Gunfire",exp:"Explosive",meat:"Meat Horror",blunt:"Blunt force",melee:"Melee",env:"Environmental",abs:"Absurd"};
+const DEATHS = [
+  {victim:"John Tolentino", file:"hue",         method:"blunt", cause:"52-lb slab of concrete rubble dropped onto his skull"},
+  {victim:"John Tolentino", file:"terror",      method:"meat",  cause:"Half-eaten and flung across the sky by the meat horror"},
+  {victim:"John Tolentino", file:"bloodfest",   method:"meat",  cause:"Present at the party. Does not make it out."},
+  {victim:"John Tolentino", file:"battleroyale",method:"exp",   cause:"Head blown to bits reaching for amphetamines"},
+  {victim:"Adrian Nguyen",  file:"meatsquad",   method:"exp",   cause:"Pulled his own grenade pin; Aldrin's shot detonated it"},
+  {victim:"Adrian Nguyen",  file:"saw",         method:"abs",   cause:"Drilled a pound of flesh from his own arm. 'Semper Fi.'"},
+  {victim:"Syed",           file:"meatsquad",   method:"gun",   cause:"Shot reaching to free a trapped astronaut"},
+  {victim:"Prigozhin",      file:"meatsquad",   method:"gun",   cause:"Half his head removed by Aldrin's desert eagle"},
+  {victim:"David Elyshiv",  file:"meathorror",  method:"abs",   cause:"Ripped out his own liver rather than be executed"},
+  {victim:"David Elyshiv",  file:"battleroyale",method:"melee", cause:"Crossbow bolt through the skull — couldn't outrun Leviticus"},
+  {victim:"Dr. Nazmian",    file:"meathorror",  method:"meat",  cause:"Crunched. Followed by a greasy fart."},
+  {victim:"Randall Smith",  file:"battleroyale",method:"exp",   cause:"Neck collar detonated when no one would help remove it"},
+  {victim:"Jeremy Samson",  file:"battleroyale",method:"gun",   cause:"Shot for stepping toward Nick Wong"},
+  {victim:"James Forester", file:"battleroyale",method:"gun",   cause:"Executed by Syed with the group's one bullet"},
+  {victim:"Nick Wong",      file:"nytbest",     method:"exp",   cause:"Vaporized with the TianGongWong by a nuclear torpedo (alt. ending)"},
+  {victim:"enzo Cellis",    file:"nytbest",     method:"gun",   cause:"Executed in the janitor's closet. Director to janitor, full circle."},
+  {victim:"John Fogle",     file:"nytbest",     method:"gun",   cause:"Head blown off by Nick Wong. 'No witnesses.'"},
+  {victim:"Andrew Thai Tran",file:"insectoids", method:"env",   cause:"Chose to be glassed alongside the planet with his men"},
+  {victim:"Yvens Chernovsky",file:"desolate",   method:"meat",  cause:"Tore himself apart under the meat experiment"},
+  {victim:"Dylan Goldstien",file:"desolate",    method:"env",   cause:"Overcome by intoxicating meat vapor; head split on a counter"},
+  {victim:"Sean",           file:"hue",         method:"env",   cause:"Diced by a flung marble statue during the lobby strike"},
+  {victim:"Huel Fricksin",  file:"hue",         method:"gun",   cause:"Head exploded by a 14.5mm round after a spike trap"},
+  {victim:"Cedric Viscaraz",file:"shenzhen",    method:"env",   cause:"240 volts DC through the UART2 line"},
+  {victim:"Allesandro Franco",file:"shenzhen",  method:"abs",   cause:"4,000 amps after downloading the FL Studio pack"},
+  {victim:"Vincent Lacap",  file:"boodram",     method:"abs",   cause:"Dropped dead of adrenaline — a brain vessel burst"},
+  {victim:"Massimo Genna",  file:"boodram",     method:"blunt", cause:"Chromebook to the head. Five megajoules."},
+];
+
+/* ------- TIMELINE ------- */
+const TIMELINE = [
+  {era:"The 20th-Century Front"},
+  {date:"Sept 18, 1969", story:"hue"},
+  {era:"The 2003 Incident"},
+  {date:"Oct 11, 2003", story:"meathorror"},
+  {era:"The 2023 Bloodmonth"},
+  {date:"Oct 2, 2023", story:"terror"},
+  {date:"Oct 31, 2023", story:"bloodfest"},
+  {date:"2023", story:"battleroyale"},
+  {date:"Halloween", story:"saw"},
+  {era:"The Present Continuity"},
+  {date:"Present day", story:"meatsquad"},
+  {date:"+7 weeks", story:"meatsquad2"},
+  {date:"Undated · ongoing", story:"boodram"},
+  {date:"Undated · ongoing", story:"shenzhen"},
+  {era:"Deep Future (3019 AD →)"},
+  {date:"Wartime", story:"insectoids"},
+  {date:"Deep future", story:"desolate"},
+];
+
+/* ------- ACCLAIM (verbatim) ------- */
+const ACCLAIM = [
+  {q:"Woah! THAT WAS INTENSE. Did that really just happen? The author isn't afraid to kill off characters!", who:"Dougie Vermicelli"},
+  {q:"My grandma could write better than this. She's dead.", who:"Ronald Hue, author of Saigon City"},
+  {q:"Wong is a story of triumph and tribulations… and guts and galore.", who:"John Tolentino, Nobel Prize winner"},
+  {q:"It was as if I was right in the midst of war. Every death hit like a truck.", who:"Eduardo Saramoso, Vinestar"},
+  {q:"God damn. If pigs could fly, this story would be a 747 Boeing airliner. Bravo.", who:"HardHat Co. / Fogle News"},
+  {q:"Meh. Not enough battleships and steam piston trains!", who:"Adrian Nguyen"},
+  {q:"Insectoids' Wrath struck deep into my heart, leaving a chasm of emotions.", who:"Albert J. Franco"},
+  {q:"Syed was my favorite character until his crevasse was utterly ravaged beyond repair.", who:"Vincent Lacap, co-author"},
+  {q:"✰✰✰✰✰✰✰✰✰✰✰✰", who:"Beth Richard, casserole enthusiast"},
+  {q:"Holy sh#t.", who:"Andrew Thai Tran, survivor of Huế"},
+];
+
+/* ------- LEXICON ------- */
+const LEXICON = [
+  {term:"murk", pos:"verb", def:"To kill, especially from range. 'Could murk people a mile away.' Present in nearly every file."},
+  {term:"cog", pos:"noun", def:"An expendable person; a component in someone else's machine. Also a person under another's control. 'You were simply pawns to me. Cogs.'"},
+  {term:"figment", pos:"noun", def:"What remains of you after death — a memory, a stain on the floor, nothing much. 'His head was nothing but a figment of a stain.'"},
+  {term:"the gears don't turn themselves", pos:"motto", def:"The Figglebottom family creed. Failure to collaborate is a refusal to live — an insistence on suicide, if you will."},
+  {term:"gander", pos:"noun", def:"enzo Cellis's favorite word. Deployed at every opportunity, appropriate or otherwise."},
+  {term:"strogonoff", pos:"verb", def:"An in-universe euphemism, deployed mainly during Syed's interrogation at An Lao Valley. Do not ask."},
+  {term:"mopped up", pos:"phrase", def:"Cleaned up; eliminated. The Meat Squad's stock in trade. 'Those guys got f7cking mopped up.'"},
+  {term:"Cargo 200", pos:"code", def:"Radio brevity for a killed operative. Used straight, which somehow makes it funnier."},
+  {term:"slop / reverse slop", pos:"noun", def:"The group's internal quality metric. 'Reverse slop' is a compliment. 'I'm not writing this slop anymore' is a resignation."},
+  {term:"hard-core", pos:"adj.", def:"Dylan Larsen's entire vocabulary of weapon appraisal. 'God damn. This sh8 is hard-core.'"},
+  {term:"volumetric", pos:"adj.", def:"The preferred descriptor for a large-bodied character. Technically accurate. Emotionally devastating."},
+  {term:"Zdis good", pos:"interj.", def:"Highest form of praise available in the margins. See also: 'Voila!!'"},
+];
+
+/* ------- QUIZ (verbatim) ------- */
+const QUIZ = [
+  {q:"Based on the passage, Mr. Boodram's behavior can be described as __________.",
+   opts:["enthusiastic and engaged","stoic and indifferent","friendly and approachable","cautious and reserved"], a:1},
+  {q:"What is Mr. Boodram likely contemplating throughout the passage?",
+   opts:["The upcoming Disney villain project","The Paria pipeline incident","His troubled past","His career aspirations"], a:1},
+  {q:"How do the actions of the Meat Squad during their mission align with traditional military ethics?",
+   opts:["They strictly adhere to military ethics.","They deviate significantly due to the nature of their mission.","They redefine military ethics to suit their objectives.","They operate in a gray area, blurring the lines."], a:1},
+  {q:"What psychological effects are evident in the members of the Meat Squad, particularly Adrian?",
+   opts:["Enhanced performance under pressure.","Severe anxiety and loss of composure.","Increased aggression and impulsivity.","Development of strong leadership skills."], a:1},
+  {q:"How does Prigozhin's betrayal affect the team's cohesion and trust?",
+   opts:["It strengthens the team's resolve and unity.","It leads to a complete breakdown of trust and loyalty.","It has no significant impact.","It motivates them to reevaluate their goals."], a:1},
+  {q:"What aspect of Adrian Nguyen's background is crucial to his role in the Meat Squad?",
+   opts:["His physical strength and combat skills","His expertise in naval warfare and battleships","His leadership and strategic planning","His connections with military officials"], a:1},
+];
+
+/* ================= LOGIC ================= */
+const storyById  = Object.fromEntries(STORIES.map(s=>[s.id,s]));
+const personById = Object.fromEntries(PEOPLE.map(p=>[p.id,p]));
+let currentStrand = "all";
+
+function bodyText(key){const el=document.querySelector(`script[data-body="${key}"]`);return el?el.textContent.trim():"";}
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function strandName(id){return STRANDS.find(x=>x.id===id).name;}
+
+const VIEWS=["home","archive","map","codex","ledger","timeline","lexicon","acclaim","quiz"];
+function go(view,opts={}){
+  VIEWS.forEach(v=>{const el=document.getElementById("view-"+v);if(el)el.classList.toggle("hidden",v!==view);});
+  document.querySelectorAll(".topnav button").forEach(b=>b.classList.toggle("on",b.dataset.view===view));
+  if(view==="archive") renderArchive(opts.strand||currentStrand);
+  if(view==="map") renderMap();
+  if(view==="codex") renderCodex();
+  if(view==="ledger") renderLedger();
+  if(view==="timeline") renderTimeline();
+  if(view==="lexicon") renderLexicon();
+  if(view==="acclaim") renderAcclaim();
+  if(view==="quiz") renderQuiz();
+  window.scrollTo({top:0});
+}
+
+/* ---- HOME sections ---- */
+const HOME_SECTIONS=[
+  {t:"Archive",v:"archive",d:"Every case file, sorted into its continuity strand. The reader with the margin commentary."},
+  {t:"The Map",v:"map",d:"A live network of how every story wires into every other. It really is all connected."},
+  {t:"Personnel",v:"codex",d:"The recurring cast, and every file each of them dies in."},
+  {t:"The Ledger",v:"ledger",d:"Every named death, filed by victim, cause, and method. Sortable."},
+  {t:"Timeline",v:"timeline",d:"1969 → 3019 AD. The whole sprawl, in order."},
+  {t:"The Lexicon",v:"lexicon",d:"Murk, cog, figment, strogonoff. The universe's private vocabulary."},
+  {t:"Acclaim",v:"acclaim",d:"What the critics (the authors, and their characters) are saying."},
+  {t:"The Exam",v:"quiz",d:"The reading-comprehension quiz the authors wrote about their own work. Playable."},
+];
+function renderHomeSections(){
+  const g=document.getElementById("homeSections");g.innerHTML="";
+  HOME_SECTIONS.forEach(s=>{
+    const b=document.createElement("button");b.className="hs-card";b.onclick=()=>go(s.v);
+    b.innerHTML=`<div class="hc-t">${s.t}</div><div class="hc-d">${s.d}</div>`;g.appendChild(b);
+  });
+}
+
+/* ---- ARCHIVE + READER ---- */
+function renderStrandList(){
+  const wrap=document.getElementById("strandList");wrap.innerHTML="";
+  STRANDS.forEach(st=>{
+    const count=st.id==="all"?STORIES.length:STORIES.filter(s=>s.strand===st.id).length;
+    const b=document.createElement("button");
+    b.className="strand"+(st.id===currentStrand?" on":"");
+    b.innerHTML=`${st.name}<span class="ct">${count}</span>`;
+    b.onclick=()=>{currentStrand=st.id;renderArchive(st.id);};
+    wrap.appendChild(b);
+  });
+}
+function renderArchive(strand){
+  currentStrand=strand;renderStrandList();
+  const list=strand==="all"?STORIES:STORIES.filter(s=>s.strand===strand);
+  const blurbs={all:"Every incident on record, across every strand of the continuity.",meat:"The through-spine of the universe. Operatives, mission objectives, and the men who betray them.",horror:"David Elyshiv in his many forms. Wherever there is meat, there is wrath.",war:"Field reports from wars that never quite happened, filed in the past tense.",corp:"The quiet apocalypse of the cubicle, the classroom, and the group chat.",royale:"Games with one rule: only one of you leaves.",verse:"Odes, marginalia, and the ephemera holding the canon together."};
+  const pane=document.getElementById("mainPane");
+  pane.innerHTML=`<div class="index-head"><div><h2>${strandName(strand)}</h2><p>${blurbs[strand]}</p></div><div class="eyebrow">${list.length} file${list.length===1?"":"s"}</div></div><div class="cards" id="cardGrid"></div>`;
+  const grid=pane.querySelector("#cardGrid");
+  list.forEach(s=>{
+    const c=document.createElement("button");c.className="card";c.onclick=()=>renderReader(s.id);
+    c.innerHTML=`<div class="card-top"><span class="card-file">${s.file}</span><span class="card-tag">${strandName(s.strand)}</span></div>
+      <div class="card-body"><h3>${s.title}</h3><div class="syn">${s.syn}</div>
+      <div class="foot"><span><span class="status-dot ${s.status==='frag'?'frag':''}"></span>${s.body?"Readable":"Filed"}</span><span class="kia">KIA ${s.kia}</span></div></div>`;
+    grid.appendChild(c);
+  });
+}
+function renderReader(id){
+  const s=storyById[id];const pane=document.getElementById("mainPane");
+  const hasComments=!!(s.body&&COMMENTS[id]&&COMMENTS[id].length);
+  let textHtml="";
+  if(s.body){
+    const paras=bodyText(s.body).split(/\n\s*\n/);
+    textHtml=paras.map((p,i)=>`<p>${escapeHtml(p)}</p>`).join("");
+  }else{
+    textHtml=`<div class="synopsis">${s.syn}</div><p class="continues">— File on record · full text not yet transcribed into the archive —</p>`;
+  }
+  const castChips=s.cast.map(cid=>{const p=personById[cid];return p?`<button class="chip person" onclick="jumpToPerson('${cid}')">${p.name}</button>`:"";}).join("");
+  const connChips=s.conn.map(cid=>{const c=storyById[cid];return c?`<button class="chip" onclick="renderReader('${cid}')">${c.file} · ${c.title}</button>`:"";}).join("");
+  pane.innerHTML=`<div class="reader">
+      <button class="back" onclick="renderArchive(currentStrand)">← Back to ${strandName(currentStrand)}</button>
+      <div class="file-header">
+        <div class="bar"><span>FILE ${s.file}</span><span>CONFIRMED KIA: ${s.kia}</span></div>
+        <div class="body"><h1>${s.title}</h1>
+          <div class="meta-grid"><span>STRAND · <b>${strandName(s.strand)}</b></span><span>INCIDENT DATE · <b>${s.date}</b></span><span>STATUS · <b>${s.status==='frag'?'FRAGMENTARY':'STABLE'}</b></span></div>
+          <div class="tags">${s.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+        </div>
+      </div>
+      <div class="reader-controls">
+        <button class="gallery-toggle" id="galToggle" ${hasComments?"":"disabled"} onclick="toggleGallery('${id}')">${hasComments?`✎ Show the peanut gallery (${COMMENTS[id].length})`:"No margin notes on this file"}</button>
+      </div>
+      <div class="story-text" id="storyText">${textHtml}</div>
+      <div class="connections"><h4>Cross-reference</h4>
+        ${castChips?`<div class="conn-sub">Recurring personnel</div><div class="conn-list">${castChips}</div>`:""}
+        ${connChips?`<div class="conn-sub">Connected incidents</div><div class="conn-list">${connChips}</div>`:""}
+      </div>
+    </div>`;
+  window.scrollTo({top:0});
+}
+let galleryOn=false;
+function toggleGallery(id){
+  galleryOn=!galleryOn;
+  const btn=document.getElementById("galToggle");
+  const container=document.getElementById("storyText");
+  container.querySelectorAll(".margin-note").forEach(n=>n.remove());
+  if(galleryOn){
+    btn.classList.add("on");btn.textContent=`✎ Hide the peanut gallery (${COMMENTS[id].length})`;
+    const paras=[...container.querySelectorAll("p")];
+    // insert from bottom up so indices stay valid
+    [...COMMENTS[id]].sort((a,b)=>b.after-a.after).forEach(c=>{
+      const target=paras[c.after];if(!target)return;
+      const note=document.createElement("div");note.className="margin-note";note.textContent=c.text;
+      target.after(note);
+    });
+  }else{
+    btn.classList.remove("on");btn.textContent=`✎ Show the peanut gallery (${COMMENTS[id].length})`;
+  }
+}
+function jumpToPerson(id){
+  go("codex");
+  setTimeout(()=>{const el=document.getElementById("person-"+id);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.animate?.([{background:"rgba(135,33,29,.18)"},{background:"var(--panel)"}],{duration:1200});}},60);
+}
+
+/* ---- MAP ---- */
+function computeEdges(){
+  const edges=[];
+  for(let i=0;i<STORIES.length;i++){
+    for(let j=i+1;j<STORIES.length;j++){
+      const a=STORIES[i],b=STORIES[j];
+      const linked=a.conn.includes(b.id)||b.conn.includes(a.id)||a.cast.some(c=>b.cast.includes(c));
+      if(linked) edges.push([i,j]);
+    }
+  }
+  return edges;
+}
+function renderMap(){
+  const svg=document.getElementById("mapSvg");
+  const W=920,H=660,cx=W/2,cy=H/2,R=250;
+  const edges=computeEdges();
+  const deg=STORIES.map((_,i)=>edges.filter(e=>e[0]===i||e[1]===i).length);
+  const pos=STORIES.map((s,i)=>{
+    const ang=(i/STORIES.length)*Math.PI*2-Math.PI/2;
+    return {x:cx+Math.cos(ang)*R,y:cy+Math.sin(ang)*R,ang};
+  });
+  let svgHtml="";
+  // edges
+  edges.forEach(([i,j],k)=>{
+    const p1=pos[i],p2=pos[j];
+    const mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
+    const cxp=cx+(mx-cx)*0.35,cyp=cy+(my-cy)*0.35; // pull toward center
+    svgHtml+=`<path class="map-edge" data-e="${i}-${j}" data-a="${i}" data-b="${j}" d="M${p1.x.toFixed(1)} ${p1.y.toFixed(1)} Q ${cxp.toFixed(1)} ${cyp.toFixed(1)} ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}" stroke-width="1"/>`;
+  });
+  // center hub label
+  svgHtml+=`<text x="${cx}" y="${cy-4}" text-anchor="middle" style="font-family:'Anton',sans-serif;font-size:15px;fill:var(--blood);letter-spacing:.05em">WONG SPACE</text>`;
+  svgHtml+=`<text x="${cx}" y="${cy+14}" text-anchor="middle" style="font-family:'Anton',sans-serif;font-size:15px;fill:var(--blood);letter-spacing:.05em">CENTER</text>`;
+  svgHtml+=`<text x="${cx}" y="${cy+32}" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--ink-soft);letter-spacing:.14em">THE GRAVITY WELL</text>`;
+  // nodes
+  STORIES.forEach((s,i)=>{
+    const p=pos[i];const r=8+deg[i]*1.6;
+    const labelAnchor=p.x<cx-20?"end":(p.x>cx+20?"start":"middle");
+    const lx=p.x+(labelAnchor==="end"?-(r+6):labelAnchor==="start"?(r+6):0);
+    const ly=p.y+(p.y<cy?-(r+6):(r+14));
+    svgHtml+=`<g class="map-node" data-i="${i}" tabindex="0" role="button" aria-label="${s.title}">
+      <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${r.toFixed(1)}" fill="${STRAND_HEX[s.strand]}" stroke="var(--bg)" stroke-width="2"/>
+      <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${labelAnchor}">${s.file}</text>
+    </g>`;
+  });
+  svg.innerHTML=svgHtml;
+
+  // legend
+  const lg=document.getElementById("mapLegend");
+  lg.innerHTML=STRANDS.filter(s=>s.id!=="all").map(s=>`<span><span class="lg-dot" style="background:${STRAND_HEX[s.id]}"></span>${s.name}</span>`).join("");
+
+  // interactions
+  const caption=document.getElementById("mapCaption");
+  const nodes=[...svg.querySelectorAll(".map-node")];
+  const edgeEls=[...svg.querySelectorAll(".map-edge")];
+  function highlight(i){
+    const neighbors=new Set([i]);
+    edges.forEach(([a,b])=>{if(a===i)neighbors.add(b);if(b===i)neighbors.add(a);});
+    nodes.forEach(n=>{const ni=+n.dataset.i;n.querySelector("circle").style.opacity=neighbors.has(ni)?"1":"0.18";n.querySelector("text").style.opacity=neighbors.has(ni)?"1":"0.15";});
+    edgeEls.forEach(e=>{const on=(+e.dataset.a===i||+e.dataset.b===i);e.style.opacity=on?"1":"0.05";e.style.stroke=on?STRAND_HEX[STORIES[i].strand]:"var(--line-strong)";e.setAttribute("stroke-width",on?"2":"1");});
+    const s=STORIES[i];const others=[...neighbors].filter(x=>x!==i).map(x=>STORIES[x].title);
+    caption.innerHTML=`<b>${s.title}</b> &nbsp;→&nbsp; wired to ${others.length} file${others.length===1?"":"s"}: ${others.join(" · ")}`;
+  }
+  function reset(){
+    nodes.forEach(n=>{n.querySelector("circle").style.opacity="1";n.querySelector("text").style.opacity="1";});
+    edgeEls.forEach(e=>{e.style.opacity="0.25";e.style.stroke="var(--line-strong)";e.setAttribute("stroke-width","1");});
+    caption.innerHTML="<b>Hover a file</b> to trace its connections across the canon.";
+  }
+  nodes.forEach(n=>{
+    const i=+n.dataset.i;
+    n.addEventListener("mouseenter",()=>highlight(i));
+    n.addEventListener("focus",()=>highlight(i));
+    n.addEventListener("mouseleave",reset);
+    n.addEventListener("blur",reset);
+    n.addEventListener("click",()=>{currentStrand=STORIES[i].strand;go("archive");renderReader(STORIES[i].id);});
+    n.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();currentStrand=STORIES[i].strand;go("archive");renderReader(STORIES[i].id);}});
+  });
+  reset();
+}
+
+/* ---- CODEX ---- */
+function renderCodex(){
+  const grid=document.getElementById("personGrid");grid.innerHTML="";
+  PEOPLE.forEach(p=>{
+    const el=document.createElement("div");el.className="person";el.id="person-"+p.id;
+    const files=p.files.map(fid=>{const f=storyById[fid];return f?`<button class="filelink" onclick="openFileFromView('${fid}')">${f.file} · ${f.title}</button>`:"";}).join("");
+    el.innerHTML=`<span class="deaths">${p.files.length}× files</span><div class="pname">${p.name}</div><div class="prole">${p.role}</div><div class="pnote">${p.note}</div><div class="pfiles"><div class="pfiles-h">Appears in</div>${files}</div>`;
+    grid.appendChild(el);
+  });
+}
+function openFileFromView(fid){const s=storyById[fid];currentStrand=s.strand;go("archive");renderReader(fid);}
+
+/* ---- LEDGER ---- */
+let ledgerSort={key:"victim",dir:1};
+function renderLedger(){
+  const methodSel=document.getElementById("ledgerMethod");
+  if(methodSel.options.length<=1){Object.entries(METHODS).forEach(([k,v])=>{const o=document.createElement("option");o.value=k;o.textContent=v;methodSel.appendChild(o);});}
+  const q=document.getElementById("ledgerSearch").value.toLowerCase();
+  const mf=methodSel.value;
+  let rows=DEATHS.filter(d=>{
+    const f=storyById[d.file];const fname=f?f.title:d.file;
+    const hit=(d.victim+" "+d.cause+" "+fname).toLowerCase().includes(q);
+    return hit&&(!mf||d.method===mf);
+  });
+  rows.sort((a,b)=>{
+    let av,bv;
+    if(ledgerSort.key==="file"){av=(storyById[a.file]?.title||a.file);bv=(storyById[b.file]?.title||b.file);}
+    else if(ledgerSort.key==="method"){av=METHODS[a.method];bv=METHODS[b.method];}
+    else{av=a[ledgerSort.key];bv=b[ledgerSort.key];}
+    return av.localeCompare(bv)*ledgerSort.dir;
+  });
+  const body=document.getElementById("ledgerBody");
+  body.innerHTML=rows.map(d=>{
+    const f=storyById[d.file];
+    return `<tr>
+      <td class="victim">${d.victim}</td>
+      <td>${d.cause}</td>
+      <td><span class="method-pill" style="background:${M[d.method]}">${METHODS[d.method]}</span></td>
+      <td>${f?`<span class="file-ref" onclick="openFileFromView('${d.file}')">${f.file}</span>`:d.file}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("ledgerCount").textContent=`${rows.length} recorded`;
+}
+function sortLedger(key){ledgerSort.dir=(ledgerSort.key===key)?-ledgerSort.dir:1;ledgerSort.key=key;renderLedger();}
+
+/* ---- TIMELINE ---- */
+function renderTimeline(){
+  const tl=document.getElementById("timeline");tl.innerHTML="";
+  TIMELINE.forEach(item=>{
+    if(item.era){const h=document.createElement("div");h.className="tl-era";h.textContent=item.era;tl.appendChild(h);return;}
+    const s=storyById[item.story];if(!s)return;
+    const el=document.createElement("div");el.className="tl-item";el.onclick=()=>openFileFromView(s.id);
+    el.innerHTML=`<div class="tl-date">${item.date} · ${s.file}</div><div class="tl-title">${s.title}</div><div class="tl-note">${s.syn}</div>`;
+    tl.appendChild(el);
+  });
+}
+
+/* ---- LEXICON ---- */
+function renderLexicon(){
+  const g=document.getElementById("lexGrid");g.innerHTML="";
+  LEXICON.forEach(l=>{const el=document.createElement("div");el.className="lex";el.innerHTML=`<div class="term">${l.term}</div><div class="pos">${l.pos}</div><div class="def">${l.def}</div>`;g.appendChild(el);});
+}
+
+/* ---- ACCLAIM ---- */
+function renderAcclaim(){
+  const g=document.getElementById("acclaimGrid");g.innerHTML="";
+  ACCLAIM.forEach(a=>{const el=document.createElement("div");el.className="blurb";el.innerHTML=`<q>${a.q}</q><div class="cite">— <b>${a.who}</b></div>`;g.appendChild(el);});
+}
+
+/* ---- QUIZ ---- */
+let quizScore=0,quizAnswered=0;
+function renderQuiz(){
+  quizScore=0;quizAnswered=0;
+  const wrap=document.getElementById("quizQuestions");wrap.innerHTML="";
+  const letters=["A","B","C","D"];
+  QUIZ.forEach((item,qi)=>{
+    const card=document.createElement("div");card.className="qcard";
+    card.innerHTML=`<div class="qnum">QUESTION ${qi+1} / ${QUIZ.length}</div><div class="qtext">${item.q}</div><div class="opts"></div>`;
+    const opts=card.querySelector(".opts");
+    item.opts.forEach((o,oi)=>{
+      const b=document.createElement("button");b.className="opt";b.innerHTML=`<span class="mk">${letters[oi]})</span>${o}`;
+      b.onclick=()=>{
+        if(card.dataset.done)return;card.dataset.done="1";quizAnswered++;
+        [...opts.children].forEach((btn,bi)=>{btn.disabled=true;if(bi===item.a)btn.classList.add("correct");if(bi===oi&&oi!==item.a)btn.classList.add("wrong");});
+        if(oi===item.a)quizScore++;updateScore();
+      };
+      opts.appendChild(b);
+    });
+    wrap.appendChild(card);
+  });
+  updateScore();
+}
+function updateScore(){
+  document.getElementById("quizScore").innerHTML=`SCORE: <b>${quizScore}</b> / ${quizAnswered} ANSWERED`+(quizAnswered===QUIZ.length?` · ${quizScore>=5?"THE AUTHOR APPROVES":"C's get degrees"}`:"");
+}
+
+/* ---- COUNT-UP ---- */
+function animateCount(el,target,dur=1100){
+  if(window.matchMedia("(prefers-reduced-motion:reduce)").matches){el.textContent=target;return;}
+  const start=performance.now();
+  (function tick(now){const t=Math.min(1,(now-start)/dur);el.textContent=Math.round(target*(1-Math.pow(1-t,3)));if(t<1)requestAnimationFrame(tick);})(start);
+}
+
+/* ---- INIT ---- */
+(function init(){
+  document.getElementById("fileCount").textContent=STORIES.length;
+  document.getElementById("castCount").textContent=PEOPLE.length;
+  document.getElementById("filesStat").textContent=STORIES.length;
+  animateCount(document.getElementById("kiaStat"),900);
+  renderStrandList();renderHomeSections();
+})();
+</script>
+</body>
+</html>
